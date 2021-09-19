@@ -27,17 +27,19 @@ public class GetInController {
 
     public void getIn() throws SQLException, RemoteException {
         if (username.getText()!=null){
-            client.setClientName(username.getText());
-            Platform.runLater(()->{
-                try {
-                    client.addUser(client.getClientName());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+            for (int i = 0; i < client.getAllUsers().size(); i++) {
+                if (client.getAllUsers().contains(username.getText())){
+                    System.out.println("Already exist");
+                    client.setClientName(username.getText());
+                    viewhandler.openChatView();
                 }
-            });
-            viewhandler.openChatView();
+                else {
+                    client.setClientName(username.getText());
+                    client.increase(client.getClientName());
+                    viewhandler.openChatView();
+                }
+                break;
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Viewhandler {
 
@@ -30,7 +31,7 @@ public class Viewhandler {
             mainStage.setTitle("Peer to peer");
             chat=new Scene(root);
         }
-        catch (IOException e){
+        catch (IOException | SQLException e){
             e.printStackTrace();
         }
         mainStage.setScene(chat);

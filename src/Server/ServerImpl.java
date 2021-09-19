@@ -2,7 +2,6 @@ package Server;
 
 
 import Shared.Message;
-import javafx.application.Platform;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -29,16 +28,14 @@ public class ServerImpl implements Server {
     }
 
 
-    public ArrayList<Message> getAllMessage(String senderName,String receiveName) throws SQLException,RemoteException{
+    public ArrayList<String> getAllMessage(String senderName, String receiveName) throws SQLException,RemoteException{
         ResultSet rs = jdbc.getMessage(senderName,receiveName);
-        ArrayList<Message> messages = new ArrayList<>();
+        ArrayList<String> messages = new ArrayList<>();
 
         try {
             while (rs.next()){
                 String text = rs.getString("chatMessages");
-
-                Message message = new Message(text);
-                messages.add(message);
+                messages.add(text);
             }
         }
         catch (Exception e){
@@ -69,19 +66,49 @@ public class ServerImpl implements Server {
 
 
     public void addUser(String username) throws SQLException,RemoteException{
-        Platform.runLater(()->{
-            try {
-                jdbc.addUser(username);
-            } catch (SQLException e) {
-                e.printStackTrace();
+        jdbc.addUser(username);
+    }
+
+
+    public ArrayList<String> getAllUsers() throws SQLException,RemoteException {
+        ResultSet rs = jdbc.getAllUsers();
+        ArrayList<String> strings = new ArrayList<>();
+
+        try {
+            while (rs.next()){
+                String username = rs.getString("username");
+
+                strings.add(username);
             }
-        });
-        System.out.println("Server");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return strings;
     }
 
 
     public void increase(String username) throws SQLException,RemoteException{
         jdbc.increase(username);
+    }
+
+
+
+    public int getNum(String username) throws SQLException,RemoteException {
+        ResultSet rs = jdbc.getUnreadNum(username);
+        int num = 0;
+
+        try {
+            while (rs.next()){
+                int unread = rs.getInt("receiveMessageNum");
+
+                num = unread;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return num;
     }
 
 

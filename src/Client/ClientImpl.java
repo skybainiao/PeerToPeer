@@ -18,7 +18,7 @@ public class ClientImpl implements Client{
     private String name;
 
 
-    public void ClientImpl(String name) throws IOException, NotBoundException {
+    public  ClientImpl(String name) throws IOException, NotBoundException {
         UnicastRemoteObject.exportObject(this, 0);
         Registry registry = LocateRegistry.getRegistry("localhost", 6666);
         server = (Server) registry.lookup("Server");
@@ -32,29 +32,33 @@ public class ClientImpl implements Client{
     }
 
     @Override
-    public ArrayList<Message> getAllMessage(String receiveName) throws SQLException, RemoteException {
+    public ArrayList<String> getAllMessage(String receiveName) throws SQLException, RemoteException {
         return server.getAllMessage(name,receiveName);
     }
 
-    public String getClientName() {
+    public String getClientName() throws RemoteException {
         return name;
     }
 
-    public void setClientName(String clientName){
+    public void setClientName(String clientName) throws RemoteException{
         this.name=clientName;
     }
 
     @Override
+    public ArrayList<String> getAllUsers() throws SQLException, RemoteException {
+        return server.getAllUsers();
+    }
+
+    @Override
+    public int getNum(String username) throws SQLException, RemoteException {
+        return server.getNum(username);
+    }
+
+    @Override
     public void addUser(String username) throws SQLException, RemoteException {
-        Platform.runLater(()->{
-            try {
-                server.addUser(username);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        });
+        server.addUser(username);
+        System.out.println("Client");
+
 
     }
 

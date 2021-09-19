@@ -8,7 +8,7 @@ public class ClientStart extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Client client = new ClientImpl();
+        Client client = new ClientImpl("Jax");
         Viewhandler viewhandler = new Viewhandler(client);
         viewhandler.openGetInView();
 
